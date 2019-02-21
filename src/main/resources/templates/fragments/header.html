@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <div th:fragment="resources">
+        <link rel="shortcut icon" th:href="@{/favicon.ico}"/>
+        <link rel="bookmark" th:href="@{/favicon.ico}"/>
+        <!--   <meta name="_csrf" th:content="${_csrf.token}"/>
+           <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+        <meta content="text/html;charset=UTF-8">
+        <title>Bibliosoft</title>
+        <link rel="stylesheet" th:href="@{global/bootstrap/bootstrap.min.css}"
+              type="text/css">
+        <script th:src="@{global/js/jquery.min.js}" type="text/javascript"></script>
+        <script th:src="@{global/bootstrap/bootstrap.min.js}" type="text/javascript"></script>
+        <link rel="stylesheet" th:href="@{global/css/shareResource.css}"
+              type="text/css">
+        <script th:src="@{global/js/jquery-form.js}" type="text/javascript"></script>
+        <script th:src="@{global/js/spin.min.js}" type="text/javascript"></script>
+        <script th:src="@{global/js/iosOverlay.js}" type="text/javascript"></script>
+        <link rel="stylesheet" th:href="@{global/css/iosOverlay.css}" type="text/css">
+    </div>
+</head>
+<body>
+<div th:fragment="headLine">
+    <p id="p_saveUserName" style="display: none" sec:authentication="name"></p>
+    <div class="container">
+        <div class="row clearfix titleLineBarkground">
+            <div class="col-md-12 column ">
+                <ul class="nav nav-tabs">
+                    <li class="active" sec:authorize="hasAnyRole('ROLE_LIBRARIAN','ROLE_READER')">
+                        <a href="#homepage" data-toggle="tab">Home</a>
+                    </li>
+                    <li sec:authorize="hasAnyRole('ROLE_LIBRARIAN','ROLE_READER')">
+                        <a href="#notify" data-toggle="tab">Notify</a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_READER')">
+                        <a href="#borrowhistory" data-toggle="tab">Borrowing history</a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_LIBRARIAN')">
+                        <a href="#addbook" data-toggle="tab">Book</a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a href="#addLibrarian" data-toggle="tab">Management Librarian</a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_LIBRARIAN')">
+                        <a href="#returnBook" data-toggle="tab">Return</a>
+                    </li>
+                    <li id="changePassword" style="display: none;">
+                        <a id="changePasswordHref" href="#changePasswordDiv" data-toggle="tab"></a>
+                    </li>
+                    <li id="showBarCode" style="display: none;"
+                        sec:authorize="hasAnyRole('ROLE_LIBRARIAN','ROLE_READER')">
+                        <!--显示生成的条形码-->
+                        <a id="showBarCodeHref" href="#showBarCodeDiv" data-toggle="tab"></a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_LIBRARIAN')">
+                        <a id="dealTheReserveBook" href="#dealThedealTheReserveBookDiv" data-toggle="tab">Reserve</a>
+                    </li>
+                    <li sec:authorize="hasAnyRole('ROLE_LIBRARIAN','ROLE_READER')" style="display: none">
+                        <a id="announcementli" href="#announcementliDiv" data-toggle="tab">announcement Detail</a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_LIBRARIAN')">
+                        <a id="readerPayForFine" href="#readerPayForFineDiv" data-toggle="tab">Fine</a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_LIBRARIAN')">
+                        <a id="seeLibraryIncome" href="#libraryIncomeDiv" data-toggle="tab">Income</a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_LIBRARIAN')">
+                        <a id="managementReaderAccount" href="#managementReaderAccountDiv" data-toggle="tab">
+                            Reader
+                        </a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_LIBRARIAN')">
+                        <a id="borrowBookHref" href="#borrowBookDiv" data-toggle="tab">Borrow</a>
+                    </li>
+                    <li class="dropdown pull-right">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span
+                                sec:authentication="name"></span><strong class="caret"></strong></a>
+                        <ul class="dropdown-menu">
+                            <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a onclick="clickSystemSetting()">System
+                                    Setting</a>
+                            </li>
+                            <li sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_READER')">
+                                <a id="changePasswordDown">Change Password</a>
+                            </li>
+
+                            <li sec:authorize="hasRole('ROLE_READER')">
+                                <a onclick="jumpToChangeMyInformationModal()">Edit My Information</a>
+                                <script type="text/javascript">
+                                    function jumpToChangeMyInformationModal() {
+                                        $("#changePersonalInformation").click();
+                                    }
+                                </script>
+                            </li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <input type="submit" class="form-control" style="border: none" value="Log out"
+                                           id="logout"/>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <script type="text/javascript">
+                $("#changePasswordDown").click(function () {
+                    $("#changePasswordHref").click()
+                })
+            </script>
+        </div>
+    </div>
+</div>
+<div th:fragment="homePageSearchInput">
+    <div class="container ">
+        <pre style="font-weight: revert;background: white;width: 1000px;margin-left: 160px;margin-top:40px;border: none">
+    88888888ba   88  88           88  88                                         ad88
+    88      "8b  ""  88           88  ""                                        d8"      ,d
+    88      ,8P      88           88                                            88       88
+    88aaaaaa8P'  88  88,dPPYba,   88  88   ,adPPYba,   ,adPPYba,   ,adPPYba,  MM88MMM  MM88MMM
+    88""""""8b,  88  88P'    "8a  88  88  a8"     "8a  I8[    ""  a8"     "8a   88       88
+    88      `8b  88  88       d8  88  88  8b       d8   `"Y8ba,   8b       d8   88       88
+    88      a8P  88  88b,   ,a8"  88  88  "8a,   ,a8"  aa    ]8I  "8a,   ,a8"   88       88,
+    88888888P"   88  8Y"Ybbd8"'   88  88   `"YbbdP"'   `"YbbdP"'   `"YbbdP"'    88       "Y888
+        </pre>
+        <div class="row clearfix col-sm-4 verticalCenter">
+            <input type="text" style="height: 50px;background-color: transparent" class="form-control"
+                   id="inputBookName" placeholder="press ctrl and enter to search"/>
+        </div>
+    </div>
+    <div class="container">
+        <div class="verticalCenterSearchResult" id="searchResult" style="background: white">
+        </div>
+    </div>
+    <script th:inline="javascript">
+        var lev = [[${level}]];
+
+        $(document).keydown(function (event) {
+            if (event.ctrlKey && event.which == 13) {
+                var val = $("#inputBookName").val();
+                $.ajax({
+                    type: 'post',
+                    url: '/searchBook',
+                    dataType: 'text',
+                    data: {
+                        "sbn": val
+                    },
+                    success: function (data) {
+                        var jsonData = eval(data);
+                        document.getElementById("searchResult").innerHTML = "";
+                        var oneBookDropDownMenu = 0;
+                        $(jsonData).each(function () {
+                            $("#searchResult").append("<div class='container' style='margin-top: 20px'>" +
+                                "            <div class='row clearfix'>" +
+                                "                <div class='col-md-2 column'>" +
+                                "                   <div class='displayHorizontal'>" +
+                                "                    <label class='control-label '>Picture</label>&nbsp;&nbsp;" +
+                                "                          <div class=\"btn-group\">" +
+                                "                           <button class=\"btn btn-default\">Book Id</button> <button data-toggle=\"dropdown\" class=\"btn btn-default dropdown-toggle\"><span class=\"caret\"></span></button>" +
+                                "                            <ul class=\"dropdown-menu\" id='oneBookIdDropDownList" + oneBookDropDownMenu + "'>" +
+                                "                            </ul>" +
+                                "                          </div>" +
+                                "                   </div>" +
+                                "                    <hr>" +
+                                "                    <div>" +
+                                "                        <img id='searchedResultPic'" +
+                                "                             alt='No Picture' style='width: 100px;height: 200px;' src='/bookpicture/" + this.bookPicNumber + "'/>" +
+                                "                    </div>" +
+                                "                </div>" +
+                                "                <div class='col-md-10 column'>" +
+                                "                    <form class='form-horizontal' id='form" + this.id + "' action='/librarian/saveEditBook' method=\"post\" target=\"iframe_display\">" +
+                                "                        <div class='form-group'>" +
+                                "                            <input style='display: none;' name='bookId' value='" + this.id + "'>" +
+                                "                            <label for='bookName' class='col-sm-2 control-label'>Book Name </label>" +
+                                "                            <div class=\"col-sm-3\">" +
+                                "                                <input name='bookName' class='form-control cantEdit' value='" + this.name + "'>" +
+                                "                            </div>" +
+                                "                            <label for='author' class='col-sm-2 control-label'>author </label>" +
+                                "                            <div class=\"col-sm-3\">" +
+                                "                                <input name='author' class='form-control cantEdit' value='" + this.author + "'>" +
+                                "                            </div>" +
+                                "                        </div>" +
+                                "                        <div class='form-group'>" +
+                                "                            <label for='introduction' class='col-sm-2 control-label'>Introduction </label>" +
+                                "                            <div class=\"col-sm-10\">\n" +
+                                "                            <textarea name='introduction'  rows=\"4\" clos='15' class='col-sm-8 form-control cantEdit' style='resize: none'>" + this.introduction + "</textarea>" +
+                                "                            </div>" +
+                                "                        </div>" +
+                                "                        <div class=\"form-group\">" +
+                                "                            <label for=\"bookNumber\" class=\"col-sm-2 control-label\">surPlusBook </label>\n" +
+                                "                            <div class=\"col-sm-2\">" +
+                                "                                <input name='bookSurplus' type='number' class=\"form-control cantEdit\" readonly='readonly' value='" + this.surPlus + "'>" +
+                                "                            </div>" +
+                                "                            <label class='col-sm-2 control-label'>Book Location</label>" +
+                                "                            <div class='col-sm-3'> " +
+                                "                               <input id='bookLocation" + this.id + "' name='bookLocation' class='form-control cantEdit' readonly='readonly' value='" + this.bookLocation + "'>" +
+                                "                           </div> " +
+                                "                        <div class='col-sm-1'>" +
+                                "                              <button  type=\"button\" class=\"btn btn-default librarianChangeBookInfo\" onclick='editBookLocation(" + this.id + ",\"" + this.bookLocation + "\")'>edit</button>" +
+                                "                        </div>" +
+                                "                       </div>" +
+                                "                       <div class='form-group'>" +
+                                "                           <label class='col-sm-2 control-label'>Publisher </label>" +
+                                "                            <div class='col-sm-3'>" +
+                                "                             <input type='text' name='publisher' class='form-control cantEdit' value='" + this.publisher + "'>" +
+                                "                           </div>" +
+                                "                           <label  class='col-sm-2 control-label amountLabel' >Book Amount</label>" +
+                                "                           <div class='col-sm-2'>" +
+                                "                           <input type='number' name='bookAmount' readonly='readonly' class='form-control  cantEdit ' value='" + this.numbers + "'>" +
+                                "                           </div>" +
+                                "                         </div>" +
+                                "                         <div class='form-group'>" +
+                                "                          <div class='col-sm-offset-8'>" +
+                                "                           <button type=\"button\" class=\"btn btn-default btn-link reserveBookBtn\" onclick='reserveBook(" + this.id + ")' >Reserve This</button> " +
+                                "                           <input type='button'  onclick='LibrarianEditBook(" + this.id + ")'  class='btn btn-default librarianChangeBookInfo btn-primary'  value='Save Edit'>" +
+                                "                        </div>" +
+                                "                      </div>" +
+                                "                       </form>" +
+                                "                </div>" +
+                                "            </div>" +
+                                "        </div>");
+
+                            $.ajax({
+                                url: "/searchOneBookId",
+                                type: "post",
+                                datType: "text",
+                                async: false,
+                                data: {
+                                    "bookId": this.id
+                                },
+                                success: function (data) {
+                                    var jsonData = eval("(" + data + ")");
+                                    var i = 0;
+                                    $(jsonData).each(function () {
+                                        $("#oneBookIdDropDownList" + oneBookDropDownMenu).append(
+                                            "   <li>" +
+                                            "        <a onclick='jumpToShowOneBarCode(" + jsonData[i].id + ")'>" + jsonData[i].id + "&nbsp;&nbsp;&nbsp;&nbsp;<img width='20px;'  src='global/images/barCode.png'></a>" +
+                                            "   </li>");
+                                        i++;
+                                    });
+                                }
+                            });
+                            oneBookDropDownMenu = oneBookDropDownMenu + 1;//为oneBookDropDown增加Id
+                            //如果不是管理员的权限的话不会显示
+                            if (lev != 'reader') {
+                                $(".reserveBookBtn").css("display", "none");
+                            }
+                            //不是读者的话不能编辑图书，不能改变图书的信息
+                            if (lev != 'librarian') {
+
+                                $(".cantEdit").attr("disabled", "disabled");
+                                $(".librarianChangeBookInfo").css("display", "none");
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
+        function LibrarianEditBook(id) {
+            $("#form" + id).ajaxSubmit(function (data) {
+                if (data == "noBook") {
+                    alert("This Book Has Be Deleted.")
+                } else if (data == "ok") {
+                    //alert("Save Success");
+                    iosOverlay({
+                        text: "Success",
+                        duration: 1000,
+                        icon: "global/images/check.png"
+                    })
+                }
+            })
+        }
+
+        function editBookLocation(bookId, bookLocation) {
+            $("#modal-changeBookLocation").click();
+            $("#saveCurrentEditedBookId").val(bookId);
+            var strs = bookLocation.split(" ");
+            $("#editBookFloor").text(strs[0] + " " + strs[1]);
+            $("#editBookArea").text(strs[2] + " " + strs[3]);
+            $("#editBookShelf").text(strs[4] + " " + strs[5]);
+        }
+
+        /*预约图书的函数*/
+        function reserveBook(id) {
+            var reserveNum = prompt("Please input the amount you want to reserve");//输入预约图书的总数
+            if (reserveNum == null || reserveNum == "") {
+                alert("reserve numbers can't be null");
+            } else if (!checkAllIsNumber(reserveNum)) {
+                alert("Input Must Be Number.")
+            } else {
+                $.ajax({
+                    url: "/reader/reserveBook",
+                    type: "post",
+                    data: {
+                        "bookId": id,
+                        "reserveNum": reserveNum
+                    },
+                    dataType: "text",
+                    success: function (data) {
+                        if (data == "You have reached the reservation upper limit") {
+                            alert("You have reached the reservation upper limit")
+                        } else if (data == "You Reserve Too Much") {
+                            alert("You Reserve Too Much");
+                        } else if (data == "There are not enough books") {
+                            alert("There are not enough books");
+                        } else {
+                            iosOverlay({
+                                text: "Success",
+                                duration: 1000,
+                                icon: "global/images/check.png"
+                            });
+                            $("#showBarCodeHref").click();
+                            var jsonData = eval(data);//返回的是jsonArray可以直接解析
+                            document.getElementById("appendBarCode").innerHTML = "";
+                            for (var i = 0; i < jsonData.length; i++) {
+                                $("#appendBarCode").append("<div class='form-group'><svg  id='barCode" + i + "'></svg></div>");
+                            }
+                            for (var j = 0; j < jsonData.length; j++) {
+                                $("#barCode" + j + "").JsBarcode(jsonData[j]);
+                            }
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                })
+            }
+        }
+
+        function checkAllIsNumber(obj) {
+            var reg = /^[0-9]+$/;
+            if (reg.test(obj)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    </script>
+</div>
+<div th:fragment="changePassword">
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-3 column">
+            </div>
+            <div class="col-md-6 column">
+                <form role="form" action="/changePassword" method="post" id="changePasswordForm">
+                    <div class="form-group">
+                        <label for="OldPassword">Old Password</label>
+                        <input type="password" class="form-control" id="OldPassword"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="NewPassword1">New Password</label>
+                        <input type="password" class="form-control" id="NewPassword1" name="NewPassword1"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="NewPassword2">Confirm New Password</label>
+                        <input type="password" class="form-control" id="NewPassword2" name="NewPassword2"/>
+                    </div>
+                    <button type="button" class="btn btn-default" id="changePasswordBtn">Ok</button>
+                </form>
+            </div>
+            <div class="col-md-3 column">
+
+            </div>
+        </div>
+        <script type="text/javascript">
+
+            var oldCorrectPassword = null;
+            $("#OldPassword").blur(function () {
+                var oldPassword = $("#OldPassword").val();
+                $.ajax({
+                    url: "/confirmOldPassword",
+                    type: "post",
+                    /*  beforeSend: function (xhr) {
+                          xhr.setRequestHeader(header, token);
+                      },*/
+                    data: {
+                        "oldPassWord": oldPassword
+                    },
+                    dataType: "text",
+                    success: function (data) {
+                        if (data == "passwordOk") {
+                            oldCorrectPassword = "ok";
+                        } else if (data == "passwordError") {
+                            $("#OldPassword").val("");
+                            alert("Password error please reset")
+                        }
+                    }
+                })
+            });
+
+            $("#changePasswordBtn").click(function () {
+                if (oldCorrectPassword != "ok") {
+                    alert("Please Verfication Old Password.");
+                } else {
+                    var pas1 = $("#NewPassword1").val();
+                    var pas2 = $("#NewPassword2").val();
+                    pas1 = trim(pas1);
+                    pas2 = trim(pas2);
+                    if (pas1 == "" && pas2 == "") {
+                        alert("Can't Input  String Only With White Space .")
+                    } else {
+                        if ($("#NewPassword1").val() == $("#NewPassword2").val()) {
+                            $.ajax({
+                                url: "/changePassword",
+                                type: "post",
+                                dataType: "text",
+                                data: {
+                                    "NewPassword1": $("#NewPassword1").val()
+                                },
+                                success: function (data) {
+                                    if (data == "ok") {
+                                        iosOverlay({
+                                            text: "Success",
+                                            duration: 1000,
+                                            icon: "global/images/check.png"
+                                        });
+                                        $("#logout").click();
+                                    } else if (data == "oldAndNewPasswordEqual") {
+                                        alert("Error : New Password is Equal With Old Password.")
+                                    }
+                                }
+                            });
+                            $("#OldPassword").val("");
+                            $("#NewPassword2").val("");
+                            $("#NewPassword1").val("");
+                        } else {
+                            alert("two password Are not equal。");
+                        }
+                    }
+                }
+
+            });
+
+            function trim(str) { //删除左右两端的空格
+                return str.replace(/(^\s*)|(\s*$)/g, "");
+            }
+        </script>
+    </div>
+</div>
+</body>
+</html>

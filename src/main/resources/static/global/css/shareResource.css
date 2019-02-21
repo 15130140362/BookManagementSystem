@@ -1,0 +1,214 @@
+.titleLineBarkground {
+    background-image: linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+}
+
+/*输入框中的placeholder的字体大小*/
+#inputBookName::-webkit-input-placeholder {
+    font-size: 20px;
+}
+
+#inputannouncementCommentTextArea::-webkit-input-placeholder {
+    font-size: 20px;
+}
+
+.verticalCenter {
+    position: absolute;
+    top: 40%;
+    left: 49%;
+    margin-left: -270px;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+.verticalCenterSearchResult {
+    position: absolute;
+    top: 50%;
+}
+
+.mouseOver {
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+}
+
+.bookTypeClass {
+
+}
+
+.borrowButtonLevel {
+
+}
+
+.borrowBookNumber {
+
+}
+
+.comment {
+
+}
+
+.returnBook {
+
+}
+
+.cantEdit {
+
+}
+
+.borrowBookAmount {
+
+}
+
+.librarianChangeBookInfo {
+
+}
+
+.reserveBookBtn {
+
+}
+
+.fontShowWhite > a {
+    color: #122b40;
+}
+
+.fontShowBlack > a {
+    color: black;
+}
+
+.barShowNone::-webkit-scrollbar {
+    width: 0 !important;
+}
+
+.displayVertival {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.ignoreReserve {
+
+}
+
+.agreeReserve {
+
+}
+
+.announcementType {
+
+}
+
+.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    border-right: 1px solid #eee;
+}
+
+/* Sidebar navigation */
+.sidebar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar .nav {
+    margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+    margin-left: 0;
+}
+
+.sidebar .nav-link {
+    border-radius: 0;
+}
+
+.news_others {
+    width: auto;
+    height: 40px;
+    background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
+    padding: 0px 10px;
+    margin: 4px;
+    line-height: 40px;
+    font-size: 14px;
+    border-radius: 10px;
+    margin-left: 10px;
+    position: relative;
+}
+
+.news_my {
+    width: auto;
+    height: 40px;
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    padding: 0px 10px;
+    margin: 4px;
+    line-height: 40px;
+    font-size: 14px;
+    border-radius: 10px;
+    margin-left: 10px;
+    position: relative;
+}
+
+.displayHorizontal {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+}
+
+.displayVertical {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.messageTimeStyle {
+    font-size: 5px;
+}
+
+.messageNameStyle {
+    font-size: 12px;
+}
+
+.amountLabel {
+
+}
+
+.returnBookDeleteIco {
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2
+}
+
+.returnBookDeleteIco:focus, .returnBookDeleteIco:hover {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    filter: alpha(opacity=50);
+    opacity: .5
+}
+
+button .returnBookDeleteIco {
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: 0 0;
+    border: 0
+}
+
+.bookBookItemClass {
+
+}
+
+.retuBookItemClass {
+
+}

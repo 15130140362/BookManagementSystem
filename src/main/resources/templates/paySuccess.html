@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: resources"></div>
+</head>
+<body>
+<iframe id="iframe_display" name="iframe_display" style="display: none;"></iframe>
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="page-header">
+                <h1>
+                    Pay Success
+                    <small>
+                        <a id="modal-753722" href="#modal-container-753722" role="button" class="btn"
+                           data-toggle="modal">Click
+                            To Add Reader</a>
+                    </small>
+                    <div class="modal fade" id="modal-container-753722" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form id="readerUserNameAndPassword" th:action="@{/librarian/addReader}" method="post"
+                                  target="iframe_display">
+                          <!--      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+                                <input type="hidden" th:name="id" th:value="${id}">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">
+                                            Input Reader's name and password
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group clearfix">
+                                            <label for="username" class="small col-sm-4 control-label">Reader
+                                                Username:</label>
+                                            <div class="col-sm-8">
+                                                <input type="email" class=" form-control" id="username"
+                                                       name="username"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label for="password" class="small col-sm-4 control-label">Password:</label>
+                                            <div class="col-sm-8">
+                                                <input type="password" class="form-control" id="password"
+                                                       name="password"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="cancel" type="button" class="btn btn-default" data-dCismiss="modal">
+                                            Close
+                                        </button>
+                                        <input type="button" class="btn btn-primary" value="ok" id="addReaderBtn"
+                                               onclick="document.getElementById('cancel').click();">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--      <button id="testButton">
+                              test
+                          </button>-->
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--添加reader用户的js代码-->
+<script th:inline="javascript">
+    /*var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");*/
+    var id = [[${id}]];
+    $("#addReaderBtn").click(function () {
+        // $("#readerUserNameAndPassword").submit();
+        var username = $("#username").val();
+        var password = $("#password").val();
+        $("#username").val();
+        $("#password").val();
+        $.ajax({
+            url: "/librarian/addReader",
+            type: "post",
+         /*   beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },*/
+            data: {
+                "id": id,
+                "username": username,
+                "password": password
+            },
+            dataType: "text",
+            success: function (data) {
+                window.location.href = "/?parm=3";
+            }
+        });
+    });
+
+    /*  $("#testButton").click(function () {
+          window.location.href="/?parm=3";
+      });*/
+</script>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <div th:replace="fragments/header :: resources"></div>
+    <script type="text/javascript" th:src="@{global/js/JsBarcode.all.min.js}"></script>
+    <script type="text/javascript" th:src="@{global/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript" th:src="@{global/js/bootstrap-datetimepicker.fr.js}"></script>
+    <link type="text/css" rel="stylesheet"
+          th:href="@{global/css/bootstrap-datetimepicker.min.css}"/>
+</head>
+<body>
+<div th:replace="fragments/header :: headLine"></div>
+<!--修改个人信息的窗体-->
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <a id="changePersonalInformation" style="display: none;" href="#changePersonalInformationMOdal"
+               role="button" class="btn" data-toggle="modal"></a>
+
+            <div class="modal fade" id="changePersonalInformationMOdal" role="dialog"
+                 aria-labelledby="jumpToChangeMyInformationModalTitle" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="jumpToChangeMyInformationModalTitle">
+                                Change My Information
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal" id="changePersonalInformationForm" role="form" method="post"
+                                  th:action="@{/reader/changePersonalInformation}"
+                                  action="/reader/changePersonalInformation"
+                                  onkeydown="if(event.keyCode==13)return false;">
+                                <div class="form-group">
+                                    <label for="personalName" class="col-sm-2 control-label">Name : </label>
+                                    <div class="col-sm-3">
+                                        <input id="personalName" name="name" class="form-control" type="text"
+                                               th:value="${readerInformation.getName()}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="personalPosition" class="control-label col-sm-2">Position : </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="position" id="personalPosition"
+                                               class="form-control" th:value="${readerInformation.getPosition()}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Sex : </label>
+                                    <div class="col-sm-3">
+                                        <div class="btn-group">
+                                            <input name="sex" type="hidden" id="personalSexHiddenInput"
+                                                   th:value="${readerInformation.getSex()}">
+                                            <button class="btn btn-default" id="personalSex"
+                                                    th:text="${readerInformation.getSex()}=='' ? 'Sex' : ${readerInformation.getSex()}">
+                                                Sex
+                                            </button>
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
+                                                <span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a onclick="changePersonalSex(this)">Man</a>
+                                                </li>
+                                                <li>
+                                                    <a onclick="changePersonalSex(this)">Woman</a>
+                                                </li>
+                                            </ul>
+                                            <script type="text/javascript">
+                                                function changePersonalSex(obj) {
+                                                    $("#personalSex").text($(obj).text());
+                                                    $("#personalSexHiddenInput").val($(obj).text());
+                                                }
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Birthday : </label>
+                                    <div class="col-sm-3">
+                                        <input id="birthdayChoice" name="birthday" class="form-control"
+                                               th:value="${readerInformation.getBirthday()}">
+                                    </div>
+                                    <script type="text/javascript">
+                                        $("#birthdayChoice").datetimepicker({
+                                            language: 'zh-CN',
+                                            format: 'yyyy-mm-dd',
+                                            weekStart: 1,
+                                            todayBtn: 1,
+                                            autoclose: 1,
+                                            todayHighlight: 1,
+                                            startView: 3,
+                                            minView: 2
+                                        });
+                                    </script>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">About :</label>
+                                    <div class="col-sm-10">
+                                            <textarea style="resize: none" name="about" rows="4"
+                                                      class="form-control"
+                                                      th:text="${readerInformation.getAbout()}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="readerEmail"
+                                           class="col-sm-2 control-label"> Email </label>
+                                    <div class="col-sm-5">
+                                        <input type="email" name="email" class="form-control" id="readerEmail"
+                                               th:value="${email}"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" id="changeMyPersonalInformationCloseModal"
+                                    data-dismiss="modal">Close
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="changeMyPersonalInformation()">
+                                Save
+                            </button>
+                        </div>
+                        <script type="text/javascript">
+                            function changeMyPersonalInformation() {
+                                $("#changePersonalInformationForm").ajaxSubmit({
+                                    success: function (data) {
+                                        if (data == "error") {
+                                            alert("Edit Error");
+                                        } else {
+                                            iosOverlay({
+                                                text:"Success",
+                                                duration:1000,
+                                                icon:"global/images/check.png"
+                                            });
+                                            // alert("Sucess");
+                                            $("#changeMyPersonalInformationCloseModal").click();
+                                        }
+                                    },
+                                    error: function (data) {
+                                        alert("Edit Error")
+                                    }
+                                })
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="tab-content">
+    <div class="tab-pane active" id="homepage">
+        <div th:replace="fragments/header :: homePageSearchInput"></div>
+    </div>
+    <div class="tab-pane" id="notify">
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="page-header">
+                        <h1>
+                            <small>system messages</small>
+                        </h1>
+                    </div>
+                    <div class="container">
+                        <div class="row clearfix">
+                            <div class="col-md-12 column">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            send Time
+                                        </th>
+                                        <th>
+                                            Title
+                                        </th>
+                                        <th>
+                                            Message Body
+                                        </th>
+                                     <!--   <th>
+                                            More
+                                        </th>-->
+                                    </tr>
+                                    </thead>
+                                    <tbody id="announceMentList" th:each="temp:${announcementMessageList}">
+                                    <tr th:class="${temp.getMessageType()}">
+                                        <td th:text="${temp.getDate()}">
+
+                                        </td>
+                                        <td th:text="${temp.getTitle()}">
+
+                                        </td>
+                                        <td>
+                                            <label th:text="${temp.getBody()}">
+                                            </label>
+                                        </td>
+                                     <!--   <td>
+                                            <a th:id="${temp.getId()}"
+                                               onclick='jumpToAnnouncementCenter2(this)'>more</a>
+                                        </td>-->
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <script type="text/javascript">
+                                    function jumpToAnnouncementCenter2(obj) {
+                                        var id = $(obj).attr("id");
+                                        jumpToAnnouncementCenter1(id);
+                                    };
+
+                                    function jumpToAnnouncementCenter1(id) {
+                                        // document.getElementById("titleList").innerHTML = "";
+                                        $.ajax({
+                                            url: "/reader/requestAnnouncementListInfo",
+                                            type: "post",
+                                            dataType: "text",
+                                            success: function (data) {
+                                                document.getElementById("titleList").innerHTML = "";
+                                                var jsonData = eval("(" + data + ")");
+                                                $(jsonData).each(function () {
+                                                    var appendClass;
+                                                    if (this.messageType == "") {
+                                                        appendClass = " fontShowBlack ";
+                                                    } else {
+                                                        appendClass = this.messageType + " fontShowWhite";
+                                                    }
+                                                    if (this.id == id) {
+                                                        preId = id;
+                                                        appendClass += " active ";
+                                                    }
+
+                                                    $("#titleList").append("<li id='announce" + this.id + "' class=\"nav-item " + appendClass + " \"" +
+                                                        "                            style=\"border-radius: 7px;\">\n" +
+                                                        "                            <a  class=\"nav-link\"" +
+                                                        "                            onclick='changeTitleAndContentAndDateAndName(\"" + this.id + "\",\"" + this.title + "\",\"" + this.body + "\",\"" + this.date + "\"," +
+                                                        "                                  \"" + this.name + "\")'>" +
+                                                        "                            " + this.title +
+                                                        "                            </a>\n" +
+                                                        "                    </li>")
+                                                });
+                                            }
+                                        });
+                                        $.ajax({
+                                            url: "/reader/announcementTitleAndContent",
+                                            type: "post",
+                                            dataType: "json",
+                                            data: {
+                                                "id": id
+                                            },
+                                            success: function (data) {
+                                                //  var jsonData = eval("(" + data + ")");
+                                                //已经在之前使用了toString()方法，所以不用加括号就可以
+                                                var jsonData = eval(data);
+                                                $("#currentTitle").text(jsonData.title);
+                                                $("#currentSendTime").text(jsonData.date);
+                                                $("#currentSenderName").text(jsonData.name);
+                                                $("#currentContent").text(jsonData.body);
+                                            },
+                                            error: function (data) {
+                                            }
+                                        });
+                                        $("#announcementli").click();
+                                    }
+
+                                    function changeTitleAndContentAndDateAndName(id, title, content, date, name) {
+                                        $("#announce" + preId + "").removeClass("active");
+                                        $("#announce" + id + "").addClass("active");
+                                        preId = id;
+                                        $("#currentTitle").text(title);
+                                        $("#currentSendTime").text(date);
+                                        $("#currentSenderName").text(name);
+                                        $("#currentContent").text(content);
+                                        //没有进行历史消息的缓存先暂时将消息body进行清空
+                                        $("#announceMentBody")[0].innerHTML = "";
+                                    }
+                                </script>
+                                <script th:inline="javascript">
+                                    var target = "ws://localhost:8080/talk";
+                                    var ws = new WebSocket(target);
+                                    var myname = $("#p_saveUserName").text();
+                                    $(document).keydown(function (event) {
+                                        if (event.which == 13 && event.shiftKey) {
+                                            var messageVal = $("#inputannouncementCommentTextArea").val();
+                                            $("#inputannouncementCommentTextArea").val("");
+                                            messageVal = messageVal.trim();
+                                            if (messageVal == "") {
+                                                alert("can't send nullMessage.");
+                                            } else {
+                                                var currentTime = gettime();
+                                                addMessageToDiv("news_my", myname, messageVal, currentTime);
+                                                var obj = {
+                                                    typeId: "0",//0表示的是消息
+                                                    senderName: myname,
+                                                    messageContent: messageVal,
+                                                    time: currentTime,
+                                                    announceId: preId
+                                                };
+                                                var str = JSON.stringify(obj);
+                                                ws.send(str);
+                                            }
+                                        }
+                                    });
+                                    ws.onmessage = function (ev) {
+                                        var message = eval("(" + ev.data + ");");
+                                        if (message.typeId == "1") {
+                                            $("#announceMentList").prepend("<tr class='" + message.announcementType + "'>" +
+                                                "                                <td>" +
+                                                "                                 " + gettime() +
+                                                "                                </td>" +
+                                                "                                <td>" +
+                                                "                                 " + message.senderName +
+                                                "                                </td>" +
+                                                "                                <td>" +
+                                                "                                    " + message.messageContent +
+                                                "                                </td>" +
+                                            /*    "                                 <td>" +
+                                                "                                     <a onclick='jumpToAnnouncementCenter1(" + message.announcementId + ")'>more</a>" +
+                                                "                                 </td> " +*/
+                                                "                            </tr>");
+                                        } else if (message.typeId == "0") {
+                                            if (message.announceId == preId) {
+                                                addMessageToDiv("news_others", message.senderName, message.messageContent, message.time);
+                                            }
+                                        }
+                                    };
+
+                                    function addMessageToDiv(cssClass, senderName, content, time) {
+                                        $("#announceMentBody").append("<div class=\"displayVertical\">" +
+                                            "    <div class=\"messageTimeStyle text-center\">" +
+                                            "    " + time +
+                                            "    </div>" +
+                                            "<div class=\"displayHorizontal\">" +
+                                            "<div class='messageNameStyle'>" +
+                                            "      " + senderName +
+                                            "</div>" +
+                                            "<div class=\"" + cssClass + "\">" +
+                                            "      " + content +
+                                            "</div>" +
+                                            "</div>" +
+                                            "</div>");
+
+                                        $("#announceMentBody").scrollTop($("#announceMentBody")[0].scrollHeight);
+                                    }
+
+                                    function gettime() {
+                                        var date = new Date();
+                                        var year = date.getFullYear();
+                                        var month = date.getMonth() + 1;//js中是从0开始所以要加1
+                                        var day = date.getDate();
+                                        var hour = date.getHours();
+                                        var minute = date.getMinutes();
+                                        var second = date.getSeconds();
+                                        var presentTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ":" + second;
+                                        return presentTime;
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="borrowhistory">
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="page-header">
+                        <h1>
+                            <small>Not Return</small>
+                        </h1>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                Book id
+                            </th>
+                            <th>
+                                BookName
+                            </th>
+                            <th>
+                                Borrow Date
+                            </th>
+                            <th>
+                                Should Return Date
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="temp:${notReturnBookList}">
+                        <tr>
+                            <td th:text="${temp.getId()}">
+                            </td>
+                            <td th:text="${temp.getBookName()}">
+                            </td>
+                            <td th:text="${temp.getBorrowDate()}">
+                            </td>
+                            <td th:text="${temp.getShouldReturnDate()}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="page-header">
+                        <h1>
+                            <small>Overdue(total fine is <strong th:text="${totalFine}"> </strong> yuan )</small>
+                        </h1>
+
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                Book id
+                            </th>
+                            <th>
+                                BookName
+                            </th>
+                            <th>
+                                Borrow Date
+                            </th>
+                            <th>
+                                Should Return Date
+                            </th>
+                            <th>
+                                Fine
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="temp:${overDueBookList}">
+                        <tr class="warning">
+                            <td th:text="${temp.getId()}">
+                            </td>
+                            <td th:text="${temp.getBookName()}">
+                            </td>
+                            <td th:text="${temp.getBorrowDate()}">
+                            </td>
+                            <td th:text="${temp.getShouldReturnDate()}">
+                            </td>
+                            <td th:text="${temp.getFine()}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="page-header">
+                        <h1>
+                            <small>Has Been Returned</small>
+                        </h1>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                Book id
+                            </th>
+                            <th>
+                                BookName
+                            </th>
+                            <th>
+                                Borrow Date
+                            </th>
+                            <th>
+                                Returned Date
+                            </th>
+                            <th>
+                                Fine
+                            </th>
+                            <th>
+                                Comment
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="temp:${hasReturnBookList}">
+                        <tr class="success">
+                            <td th:text="${temp.getId()}">
+                            </td>
+                            <td th:text="${temp.getBookName()}">
+                            </td>
+                            <td th:text="${temp.getBorrowDate()}">
+                            </td>
+                            <td th:text="${temp.getShouldReturnDate()}">
+                            </td>
+                            <td th:text="${temp.getFine()}">
+                            </td>
+                            <th th:text="${temp.getComment()}">
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="changePasswordDiv">
+        <div th:replace="fragments/header :: changePassword"></div>
+    </div>
+    <div class="tab-pane" id="announcementliDiv">
+        <div class="container" id="announcementContainer">
+            <div class="col-md-3 column" style="height: 580px;">
+                <div class="page-header">
+                    <h1>
+                        <small>Announcement List :</small>
+                    </h1>
+                </div>
+                <ul id="titleList" class="nav nav-pills nav-stacked barShowNone"
+                    style="border-radius: 7px;height: 520px;overflow-y: auto">
+
+                </ul>
+            </div>
+            <div class="col-md-7 column" style="height: 580px">
+                <div class="page-header">
+                    <h1>
+                        <small id="currentTitle">Title For Header :</small>
+                    </h1>
+                </div>
+                <div id="announceMentBody"
+                     style="border: 1px solid #c4e3f3;width: 100%;height: 75%;border-radius:7px;overflow-y: auto;">
+
+                </div>
+                <div style="height: 35%;width: 100%;">
+                        <textarea id="inputannouncementCommentTextArea" class="form-control" style="height: 35%;width: 100%;border: 1px solid #000000;
+                         border-radius: 7px;resize: none;margin-top: 10px;"
+                                  placeholder="Press shift and enter to send"></textarea>
+                </div>
+            </div>
+            <div class="col-md-2 column">
+                <div class="page-header">
+                    <h1>
+                        <small> Content :</small>
+                    </h1>
+                </div>
+                <blockquote>
+                    <p id="currentContent"></p>
+                    <small id="currentSenderName"><cite></cite></small>
+                    <small class="pull-right" id="currentSendTime" style="font-size: 5px"><cite></cite></small>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="showBarCodeDiv" sec:authorize="hasRole('ROLE_READER')">
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="page-header">
+                        <h1>
+                            <small>Book BarCode</small>
+                        </h1>
+                    </div>
+                    <div class="col-md-4 column">
+
+                    </div>
+                    <div id="appendBarCode" class="col-md-4 displayVertival">
+
+                    </div>
+                    <div class="col-md-4 column">
+
+                    </div>
+
+                </div>
+            </div>
+            <script type="text/javascript">
+                //把这个放在后面就可以正确加载到上面的dom元素
+                function jumpToShowOneBarCode(id) {
+                    $("#showBarCodeHref").click();
+
+                    /*$("#apppendBarCode").html("");*/
+                    document.getElementById("appendBarCode").innerHTML = "";
+                    $("#appendBarCode").append("<div class='form-group'>" +
+                        "                       <svg id='showOneBarCode'>" +
+                        "                     </svg>" +
+                        "                       </div>");
+                    $("#showOneBarCode").JsBarcode(id);
+                }
+            </script>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{js/jquery.min.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:src="@{uploadify/jquery.uploadify.js}"></script>
+    <script type="text/javascript" th:src="@{js/ass.js}"></script>
+    <style  type="text/css" th:href="@{uploadify/uploadify.css}"></style>
+</head>
+<body>
+<input type="file" id="chooseImage">
+<div id="fileQueue"></div>
+<button th:id="send">send</button>
+</body>
+<script type="text/javascript">
+    $(function () {
+       $("#send").click(function () {
+            $("#chooseImage").uploadify('upload',"*");
+       })
+    });
+</script>
+</html>

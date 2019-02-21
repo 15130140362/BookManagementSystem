@@ -1,0 +1,34 @@
+spring:
+  mvc:
+    favicon:
+      enabled: false
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/bookmanagement?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 15130140362
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+pay:
+  alipay:
+    gatewayUrl: https://openapi.alipaydev.com/gateway.do
+    appid: 2016091600528204
+    appPrivateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+V4eQB+Fi9WOlqaSL/+DFzg2/8lFPMmXU1H6+PBqWqMkpolba/Rib5saOCzHgSWIbLE0mOEf/kAaHg1Sm1S/xCJkvl1VfxRK2aBBtZCsBjbqgB7Zjlr31JmTOCBVPVh1HeAJxR7OG5CiZD5AFkmSAdqTfrnGDcexn/QCmpwVVHx1e/EP8lJ0mhBjwnjK/JzxepCUETHVUveS7vzVmz7KHGkEgM0zo+AJT+IKDTNSK5FLAceF38mzZPDRXNaTf3uv0zgevRi7YIRGvWmfSSrorUDZou9M0WDwBftzgL9jtTE54o0z6it6TATEfiGd2ZnP26+24Hwh4iGL2YD8m3UEPAgMBAAECggEAbfAmd5Vlo/+yD3RdexNO41ExdeVi+0hTsssNbZlPjidtESQX4KKA/UMc+dwTccVQ6fr7kJC/XSf17X14fmfyKdjaibdx8z/joAGZQ2WwxVP0MAxkVz8w9pC3dp0KmelWPfpeBsnwMoBDxqxLdjxo2h4s+plKLS626hUitB8SIGg5167ozAWc9bXAO7givpL6Ha05ZIhvu11LqlX2H7ck5CkO8cnGz4v1H6JDqpmIZa0zeRVUr0ReUft1q8TD4yAHTlr95rvmLBj54kvK43l93LD1guNorPFeE7eSx3EVGK7/QJPPJFSWwlbbqvMg8osb5GYGtRecmdk1MmiVmEeEyQKBgQDqrhXs7ROuCrHuw2nBrehUYYXXmE9c+3OQ4saH38shkH6CWagMqMWAPZQbHMnxleqpUbhAPH+QNxeC6YkUSR1LerIC1FD9eeeTZPdcJsZReUzxOt7s413DVPfc/yB0eLo6AIX8Gst5VxBKMMUFkge92n3bT3dSuUd+N1lu/U6oFQKBgQDPokei3Fvp2EmdAlvVQag9+dYE2z98WRElaJKicDKZEfHdVq+M/QdZUOqnfo1qpEStE2tLpizf0rk2A/xUeuSyZzK1BRe39yRRh/rR1nWwvYt+/Yc6mDFKywtcl9MRzKvxLsatTZSlWRCq+SHcvMybdGIl5Gi/mrwMK5uuLCIJkwKBgBaGEtCkiGkB2cYCt1nBaTUADyp8EdHoyFS1jzxnPEXCaoH0PO7KG/qM7nQTtUYcj2Mk1rxDkjKzNux3oZJy2f7ujbs7yXIqixFYdW1Aw3P6YmocrlyqDcu7kfaB/glvtN/wQOvLXpAMzSFxwNciBuAv4jh0Tg2Aft4cTdcbNLtpAoGATDOOfuLIiMXsHkdjVJzIFha+yQF+BzDY7hW22w66Qxsm3MiXnPKv48Oimt4DIIQxACQEWLsf9PTtLDnCPW7sx9y/61d3IPj+xz1Ue/ZtMvQdYfnBy2tXi8+A1/aQbBPldppoJ+o1B4nsaBMOrmhL3zGTY7y0BL3RDdZjSETCKSkCgYEAyeGsT30pdTr9iTv2fZSuhHCLNyridtLnizmubge3yS0LJ816vrywF2fnFTlMar3zFnB5qP4VWRTdFYRlPvpBuh7NuOxDX0yVZGIZ83itfwB3ffblk5UmTPlkY91gccg4yLfdMbzuR+BP/8ekq9/ygDL+nXZU4dWKqTMRdO4otN4=
+    alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv1iENpTr3bMwQeBoNJY8zK3o+m8U+bUgguLnGg8h7Z6h2RQqD+Re+xF4UsHdV+XVzqCnEwi1Qr5ywVT0nHkuICoK3wr353yBhBFbO89Wm2iZ/Alus4uFgo6dit+f7s4OBApKApnjH4HRQKX1QtSJQyLvbC2gtE3UweRMWvtoTGlKLPaHQmpyjbka1OX2f6nggeoY5V9icYDOORZms3GEZqNkY2bEdAeymf0fueObm+Hufm97n/vLYpfqg4cOwjFiR71lBh8W93Dq+4MJVCmojwsuQQVvbGYuPx8VTnCqhdizoSkrl3V24h11YHFk/kXckYeyjq9elwA4CD9TeAlmTwIDAQAB
+    returnUrl:  http://22y3e16280.51mypc.cn:11954
+    notifyUrl:  http://22y3e16280.51mypc.cn:11954/notify
+server:
+  port: 8080
+logging:
+  level:
+    org:
+      springframework:
+        security: INFO
+
+
+
